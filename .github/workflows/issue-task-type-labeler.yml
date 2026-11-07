@@ -1,6 +1,6 @@
 # '📋 새 할 일' 이슈 양식의 "작업 유형" 드롭다운 값에 따라 라벨을 자동으로 붙여요.
 # 이슈 본문을 수정해서 작업 유형을 바꾸면 라벨도 다시 맞춰요.
-name: Task type labeler
+name: Issue task type labeler
 
 on:
   issues:

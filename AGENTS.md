@@ -17,13 +17,15 @@
 
 `.claude/settings.json` 에서 두 플러그인을 켜 두었어요. 레포를 열고 신뢰를 확인하면 마켓플레이스 등록과 설치를 안내받아요.
 
-| 플러그인          | 제공하는 것                                                                                         |
-| ----------------- | --------------------------------------------------------------------------------------------------- |
-| `git-workflow`    | 커밋(`auto-committer`), 브랜치 생성(`branch-creator`), **`main` 직접 커밋 차단 훅**                 |
-| `github-workflow` | 이슈 기반 작업(`/work-on-issue`), PR 전 검증(`/pr-verification`), PR 생성, 리뷰 대응(`/work-on-pr`) |
+| 플러그인          | 제공하는 것                                                                                      |
+| ----------------- | ------------------------------------------------------------------------------------------------ |
+| `git-workflow`    | 커밋(`auto-committer`), 브랜치 생성(`branch-creator`), **`main` 직접 커밋 차단 훅**              |
+| `github-workflow` | 이슈 기반 작업(`work-on-issue`), PR 전 검증(`pr-verification`), PR 생성, 리뷰 대응(`work-on-pr`) |
 
-- 작업은 **항상 이슈부터** 시작해요. 내부 작업은 `📋 새 할 일` 양식으로 이슈를 만들고 `/work-on-issue <번호>` 로 진행해요.
-  - `/work-from-scratch` 는 쓰지 않아요.
+- 플러그인 스킬은 **`/<플러그인>:<스킬>` 형식으로만** 호출돼요. (예: `/github-workflow:work-on-issue 23`)
+  - `/work-on-issue` 처럼 플러그인 이름을 빼면 `Unknown command` 오류가 나요.
+- 작업은 **항상 이슈부터** 시작해요. 내부 작업은 `📋 새 할 일` 양식으로 이슈를 만들고 `/github-workflow:work-on-issue <번호>` 로 진행해요.
+  - `work-from-scratch` 는 쓰지 않아요.
   - 큰 작업은 하위 이슈(sub-issue)로 나눠요.
 - 이 레포의 규약은 `.claude/skills/` 에 있고, 플러그인의 기본 규약보다 우선해요.
 

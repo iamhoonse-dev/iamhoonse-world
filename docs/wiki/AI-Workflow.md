@@ -59,9 +59,11 @@ graph TB
 }
 ```
 
-## `/work-on-issue` — 이슈에서 PR 까지
+## `/github-workflow:work-on-issue` — 이슈에서 PR 까지
 
-작업은 **항상 이슈부터** 시작해요. `📋 새 할 일` 이슈를 만들고 `/work-on-issue <번호>` 를 실행하면 6단계로 진행돼요.
+작업은 **항상 이슈부터** 시작해요. `📋 새 할 일` 이슈를 만들고 `/github-workflow:work-on-issue <번호>` 를 실행하면 6단계로 진행돼요.
+
+> 플러그인 스킬은 `/<플러그인>:<스킬>` 형식으로만 호출돼요. `/work-on-issue` 처럼 플러그인 이름을 빼면 `Unknown command` 오류가 나요.
 
 ```mermaid
 graph TB

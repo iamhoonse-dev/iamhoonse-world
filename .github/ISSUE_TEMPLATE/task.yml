@@ -1,6 +1,7 @@
 name: 📋 새 할 일
 description: 마일스톤 달성, 유지보수 등을 위해 꼭 필요한 작업을 등록해요.
 title: "[Task] "
+labels: ["task"]
 body:
   - type: markdown
     attributes:
@@ -12,6 +13,7 @@ body:
     id: type
     attributes:
       label: 작업 유형
+      description: 선택한 유형에 맞는 라벨이 자동으로 붙어요.
       options:
         - 신규 기능 개발
         - 기능 개선

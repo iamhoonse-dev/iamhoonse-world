@@ -7,9 +7,17 @@ user-invocable: false
 # 커밋 메시지 규약 (iamhoonse-world)
 
 > git-workflow 플러그인의 기본 규약 대신 이 문서를 따라요.
-> **함께 수정해야 하는 곳**: type 이나 scope 규칙을 바꾸면 `branch-strategy`, `pr-convention` 스킬도 함께 확인해요.
+> **함께 수정해야 하는 곳**: type 이나 scope 규칙을 바꾸면 `commitlint.config.mjs` 와 `branch-strategy`, `pr-convention` 스킬도 함께 확인해요.
 
 [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) + scope 를 사용해요.
+
+## 자동 검사 (commitlint)
+
+`.husky/commit-msg` 훅이 커밋할 때 `commitlint.config.mjs` 로 메시지를 검사하고, 규약에 맞지 않으면 커밋을 거부해요.
+
+- 검사하는 것: type 목록, scope(앱/패키지 디렉토리 이름만), 첫째 줄 72자, 요약 끝 마침표
+- 검사하지 못하는 것: 한국어 명사형 요약, 본문 내용, `Refs #번호` 유무 → 이 문서를 보고 직접 지켜요.
+- 훅이 거부하면 `--no-verify` 로 우회하지 말고 메시지를 고쳐서 다시 커밋해요.
 
 ## 형식
 

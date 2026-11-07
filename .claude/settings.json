@@ -1,0 +1,14 @@
+{
+  "extraKnownMarketplaces": {
+    "hoonse-claude-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "iamhoonse-dev/hoonse-claude-plugins"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "git-workflow@hoonse-claude-plugins": true,
+    "github-workflow@hoonse-claude-plugins": true
+  }
+}

@@ -1,0 +1,101 @@
+name: 🐛 버그 제보
+description: 사용 중 발견한 버그나 문제를 제보해 주세요.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        버그 제보 감사합니다! 🙏
+        문제를 빠르고 정확하게 파악할 수 있도록 아래 항목을 최대한 구체적으로 작성해 주세요.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 버그 내용
+      description: 어떤 문제가 발생했는지 설명해 주세요.
+      placeholder: 예) 메인 페이지에서 메뉴 버튼을 눌러도 메뉴가 열리지 않아요.
+    validations:
+      required: true
+
+  - type: input
+    id: occurred-at
+    attributes:
+      label: 발생 시각
+      description: 버그가 발생한 대략적인 시각을 알려 주세요. (서버 로그 확인에 사용돼요)
+      placeholder: 예) 2026-11-07 21:30 (KST)
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: 발생 위치
+      description: 버그가 발생한 페이지 URL 이나 화면을 알려 주세요.
+      placeholder: 예) https://...
+    validations:
+      required: false
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 재현 방법
+      description: 버그를 다시 발생시킬 수 있는 절차를 순서대로 적어 주세요.
+      placeholder: |
+        1. '...' 페이지로 이동
+        2. '...' 버튼 클릭
+        3. '...' 까지 스크롤
+        4. 오류 발생
+    validations:
+      required: true
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: 발생 빈도
+      options:
+        - 항상 발생해요
+        - 가끔 발생해요
+        - 한 번만 발생했어요
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 기대 동작
+      description: 문제가 해결되었을 때 어떻게 동작해야 하는지 적어 주세요.
+      placeholder: 예) 메뉴 버튼을 누르면 사이드 메뉴가 열려야 해요.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 사용 환경
+      description: |
+        사용 중인 기기, OS, 브라우저 정보를 적어 주세요.
+        User Agent 는 https://www.whatsmyua.info 에서 확인할 수 있어요.
+      value: |
+        - 기기: (예: MacBook Pro, iPhone 15)
+        - OS: (예: macOS 15, iOS 18)
+        - 브라우저 및 버전: (예: Chrome 130)
+        - User Agent:
+    validations:
+      required: true
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: 스크린샷 / 로그 (선택)
+      description: 문제 상황을 보여주는 스크린샷, 영상, 콘솔 에러 로그 등이 있다면 첨부해 주세요.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 추가 정보 (선택)
+      description: 그 밖에 문제 해결에 도움이 될 만한 내용이 있다면 적어 주세요.
+    validations:
+      required: false

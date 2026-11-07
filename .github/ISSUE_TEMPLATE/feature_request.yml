@@ -1,0 +1,53 @@
+name: 💡 기능 제안
+description: 이런 기능이 있으면 좋겠어요! 새로운 아이디어를 제안해 주세요.
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        아이디어를 공유해 주셔서 감사합니다! ✨
+        어떤 상황에서 왜 필요한지 알려 주시면 더 좋은 방향으로 검토할 수 있어요.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 어떤 점이 불편하거나 아쉬운가요?
+      description: 이 기능이 필요하다고 느낀 상황이나 문제를 설명해 주세요.
+      placeholder: 예) 글이 많아지니 원하는 글을 찾기가 어려워요.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 제안하는 기능
+      description: 어떤 기능이 있으면 좋을지 구체적으로 설명해 주세요.
+      placeholder: 예) 글 목록 상단에 제목/태그로 검색할 수 있는 검색창이 있으면 좋겠어요.
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefit
+    attributes:
+      label: 기대 효과
+      description: 이 기능이 생기면 무엇이 좋아질까요?
+      placeholder: 예) 예전에 읽은 글을 빠르게 다시 찾을 수 있어요.
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 고려해 본 대안 (선택)
+      description: 다른 해결 방법이나 참고할 만한 서비스가 있다면 알려 주세요.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 추가 정보 (선택)
+      description: 스케치, 스크린샷, 참고 링크 등 아이디어를 설명하는 데 도움이 되는 자료를 첨부해 주세요.
+    validations:
+      required: false

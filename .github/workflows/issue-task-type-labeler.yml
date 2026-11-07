@@ -1,0 +1,64 @@
+# '📋 새 할 일' 이슈 양식의 "작업 유형" 드롭다운 값에 따라 라벨을 자동으로 붙여요.
+# 이슈 본문을 수정해서 작업 유형을 바꾸면 라벨도 다시 맞춰요.
+name: Issue task type labeler
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  issues: write
+
+jobs:
+  label:
+    # task.yml 양식으로 만들어진 이슈만 처리
+    if: >-
+      contains(github.event.issue.labels.*.name, 'task') ||
+      contains(github.event.issue.body, '### 작업 유형')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            // 작업 유형 → 라벨 매핑 (task.yml 의 드롭다운 options 와 맞춰야 해요)
+            const TYPE_TO_LABEL = {
+              '신규 기능 개발': 'enhancement',
+              '기능 개선': 'enhancement',
+              '리팩토링': 'refactor',
+              '인프라 / 배포': 'infra',
+              '프로젝트 설정 / 관리': 'project-setting',
+              '문서화': 'documentation',
+              '기타': null,
+            };
+            const MANAGED = new Set(Object.values(TYPE_TO_LABEL).filter(Boolean));
+
+            // Issue Forms 는 본문을 "### 작업 유형\n\n<선택값>" 형태로 렌더링해요.
+            const body = context.payload.issue.body ?? '';
+            const match = body.match(/^###\s*작업 유형\s*\n+\s*(.+?)\s*$/m);
+            if (!match) {
+              core.info('작업 유형 항목을 찾지 못해서 건너뛰어요.');
+              return;
+            }
+            const type = match[1];
+            if (!(type in TYPE_TO_LABEL)) {
+              core.warning(`매핑되지 않은 작업 유형이에요: "${type}"`);
+              return;
+            }
+            const target = TYPE_TO_LABEL[type];
+
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.issue.number;
+            const current = context.payload.issue.labels.map((l) => l.name);
+
+            // 이전 작업 유형으로 붙었던 라벨 중 지금 유형과 다른 것은 제거
+            for (const name of current) {
+              if (MANAGED.has(name) && name !== target) {
+                await github.rest.issues.removeLabel({ owner, repo, issue_number, name });
+                core.info(`라벨 제거: ${name}`);
+              }
+            }
+
+            if (target && !current.includes(target)) {
+              await github.rest.issues.addLabels({ owner, repo, issue_number, labels: [target] });
+              core.info(`라벨 추가: ${target}`);
+            }

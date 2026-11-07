@@ -10,6 +10,8 @@
 | Turborepo  | 2.11.x  | 루트 `devDependencies`                                           |
 | ESLint     | 10.x    | `@repo/eslint-config` 의 `devDependencies`                       |
 | Prettier   | 3.x     | 루트 `devDependencies`                                           |
+| husky      | 9.x     | 루트 `devDependencies`                                           |
+| commitlint | 21.x    | 루트 `devDependencies`                                           |
 
 > Node 버전을 바꿀 때는 위 세 곳을 **함께** 수정해요.
 
@@ -73,3 +75,29 @@ TypeScript 는 `~6.0.3` 으로 고정했어요. `typescript-eslint` 가 지원�
 | `pnpm format:check` | 포맷 검사만       |
 | `pnpm lint`         | 전체 린트 (turbo) |
 | `pnpm check-types`  | 전체 타입 체크    |
+
+## 커밋 메시지 검사 — husky + commitlint
+
+AI 와 사람이 따르는 커밋 규약을 **Git 훅으로 강제**해요. 규약에 맞지 않는 메시지는 로컬에서 커밋되지 않아요.
+
+```mermaid
+graph TB
+    A["git commit"] --> B[".husky/commit-msg"]
+    B --> C["commitlint --edit<br/>(commitlint.config.mjs)"]
+    C -->|규약 준수| D["커밋 완료"]
+    C -->|위반| E["커밋 거부 + 오류 출력"]
+```
+
+- `pnpm install` 때 `prepare` 스크립트(`husky`)가 `core.hooksPath` 를 `.husky/_` 로 설정해요.
+- 규칙은 `@commitlint/config-conventional` 을 기반으로 레포 규약에 맞춰 덮어써요.
+
+| 규칙                   | 값                                                               |
+| ---------------------- | ---------------------------------------------------------------- |
+| `type-enum`            | feat, fix, refactor, perf, test, docs, style, build, ci, chore   |
+| `scope-enum`           | `apps/*`, `packages/*` 디렉토리 이름을 동적으로 수집 (생략 가능) |
+| `header-max-length`    | 72                                                               |
+| `body-max-line-length` | 끔 (한국어 본문, URL)                                            |
+
+- 앱/패키지를 추가하면 scope 목록이 자동으로 늘어나요.
+- 한국어 명사형 요약처럼 기계적으로 검사할 수 없는 부분은 `commit-message` 스킬로 안내해요.
+- IDE 등 GUI 에서 커밋할 때 `pnpm` 을 찾지 못하면 `~/.config/husky/init.sh` 에서 nvm 을 불러와요.

@@ -64,7 +64,7 @@ graph TB
 작업은 **항상 이슈부터** 시작해요. `📋 새 할 일` 이슈를 만들고 `/work-on-issue <번호>` 를 실행하면 6단계로 진행돼요.
 
 ```mermaid
-graph LR
+graph TB
     S1["① 이슈 분석<br/>@issue-fetcher"] --> S2["② 브랜치 생성<br/>@branch-creator"]
     S2 --> S3["③ 계획 수립<br/>✋ 승인"]
     S3 --> S4["④ 구현 + 커밋<br/>@auto-committer"]

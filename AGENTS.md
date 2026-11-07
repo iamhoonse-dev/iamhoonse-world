@@ -109,6 +109,8 @@
     typescript-config/         # @repo/typescript-config — 공용 tsconfig
     eslint-config/             # @repo/eslint-config — 공용 ESLint (flat config)
   turbo.json                   # 태스크 정의
+  commitlint.config.mjs        # 커밋 메시지 검사 규칙
+  .husky/commit-msg            # 커밋 메시지 검사 훅
   docs/wiki/                   # GitHub Wiki 원본 (main 머지 시 자동 동기화)
   .claude/
     settings.json              # 플러그인 활성화
@@ -128,6 +130,22 @@
 
 - 태스크 스크립트는 **각 패키지의 `package.json`** 에 두고, 루트 `package.json` 은 `turbo run` 으로 위임만 해요.
   Turborepo 설정을 바꿀 때는 `turborepo` 스킬을 따라 설치된 버전의 번들 문서(`node_modules/turbo/docs`)를 먼저 확인해요.
+
+### 커밋 메시지 검사
+
+- `pnpm install` 을 하면 `prepare` 스크립트가 husky 훅을 설치하고, 커밋할 때마다 commitlint 가 메시지를 검사해요.
+  - 규칙은 `commitlint.config.mjs` 에 있고, 규약 원본은 `.claude/skills/commit-message` 예요.
+  - scope 허용 목록은 `apps/*`, `packages/*` 의 디렉토리 이름에서 자동으로 만들어져요.
+- 훅이 거부하면 `--no-verify` 로 우회하지 않고 메시지를 고쳐요.
+- IDE 등 GUI 에서 커밋할 때 `pnpm` 을 찾지 못하면 `~/.config/husky/init.sh` 에서 nvm 을 불러와요.
+
+  ```sh
+  # ~/.config/husky/init.sh
+  export NVM_DIR="$HOME/.nvm"
+  . "$NVM_DIR/nvm.sh"
+  ```
+
+- **함께 수정해야 하는 곳**: 커밋 type / scope 규칙을 바꿀 때는 `commitlint.config.mjs` 와 `.claude/skills/commit-message` 를 함께 수정해요.
 
 ### 버전 관리
 

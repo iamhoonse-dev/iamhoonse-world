@@ -15,6 +15,8 @@ iamhoonse-world/
 ├── .github/                   # 이슈 양식, PR 템플릿, 워크플로우
 ├── .mcp.json                  # 공용 MCP 서버 설정
 ├── AGENTS.md / CLAUDE.md      # AI 에이전트 작업 규칙
+├── .husky/commit-msg          # 커밋 메시지 검사 훅
+├── commitlint.config.mjs      # 커밋 메시지 검사 규칙
 ├── turbo.json                 # 태스크 정의
 └── pnpm-workspace.yaml        # apps/*, packages/*
 ```

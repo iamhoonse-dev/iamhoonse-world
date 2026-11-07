@@ -1,0 +1,89 @@
+name: 📋 새 할 일
+description: 마일스톤 달성, 유지보수 등을 위해 꼭 필요한 작업을 등록해요.
+title: "[Task] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        프로젝트 진행에 필요한 작업을 등록하는 양식이에요.
+        사용자 관점의 아이디어 제안은 **💡 기능 제안** 양식을 이용해 주세요.
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: 작업 유형
+      options:
+        - 신규 기능 개발
+        - 기능 개선
+        - 리팩토링
+        - 인프라 / 배포
+        - 프로젝트 설정 / 관리
+        - 문서화
+        - 기타
+    validations:
+      required: true
+
+  - type: textarea
+    id: background
+    attributes:
+      label: 배경 및 목적
+      description: 이 작업이 왜 필요한가요? 어떤 마일스톤이나 목표와 관련이 있나요?
+      placeholder: 예) v1.0 출시를 위해 블로그 글 목록 페이지가 필요해요.
+    validations:
+      required: true
+
+  - type: textarea
+    id: todo
+    attributes:
+      label: 작업 내용
+      description: 수행해야 할 세부 작업을 체크리스트로 나열해 주세요. (큰 작업이라면 하위 이슈로 나누는 것도 좋아요)
+      value: |
+        - [ ]
+    validations:
+      required: true
+
+  - type: textarea
+    id: done-criteria
+    attributes:
+      label: 완료 조건
+      description: 어떤 상태가 되면 이 작업이 끝났다고 볼 수 있나요?
+      placeholder: |
+        - 글 목록 페이지에서 최신순으로 글이 표시된다.
+        - 모바일 / 데스크톱 레이아웃에서 모두 정상 표시된다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: 영향 범위 (선택)
+      description: 이 작업으로 변경될 것으로 예상되는 앱, 패키지, 기능을 적어 주세요.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 우선순위
+      options:
+        - 🔴 높음 — 지금 바로 필요해요
+        - 🟡 보통 — 이번 마일스톤 안에 필요해요
+        - 🟢 낮음 — 여유 있을 때 해도 돼요
+    validations:
+      required: true
+
+  - type: input
+    id: due
+    attributes:
+      label: 목표 기한 (선택)
+      placeholder: 예) 2026-11-30
+    validations:
+      required: false
+
+  - type: textarea
+    id: references
+    attributes:
+      label: 참고 자료 (선택)
+      description: 관련 이슈, PR, 문서, 링크 등을 적어 주세요.
+    validations:
+      required: false

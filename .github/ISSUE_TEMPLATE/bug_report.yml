@@ -54,6 +54,7 @@ body:
     attributes:
       label: 발생 빈도
       options:
+        - ⚠️ 선택해 주세요
         - 항상 발생해요
         - 가끔 발생해요
         - 한 번만 발생했어요

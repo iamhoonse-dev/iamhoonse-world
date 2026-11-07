@@ -107,6 +107,7 @@
     typescript-config/         # @repo/typescript-config — 공용 tsconfig
     eslint-config/             # @repo/eslint-config — 공용 ESLint (flat config)
   turbo.json                   # 태스크 정의
+  docs/wiki/                   # GitHub Wiki 원본 (main 머지 시 자동 동기화)
   .claude/
     settings.json              # 플러그인 활성화
     skills/                    # 레포 규약 + 설치한 스킬
@@ -141,6 +142,7 @@
   - 셸의 기본 Node 가 22 라면 `pnpm` 이 Corepack 쪽을 가리켜 `MODULE_NOT_FOUND` 오류가 날 수 있어요. `nvm use` 로 Node 26 에서 실행해요.
 - 레포 안에서 다른 Node 버전으로 `npm` / `npx` 를 실행하면 `devEngines` 조건 때문에 오류(`EBADDEVENGINES`)가 나요.
   `nvm use` 로 Node 26 에서 실행해요.
+  - `.mcp.json` 의 MCP 서버도 레포 폴더에서 `npx` 로 실행돼요. Node 22 환경에서 Claude Code 를 띄우면 같은 이유로 MCP 연결이 `CONNECTION_CLOSED` 로 실패해요.
 - TypeScript 는 `typescript-eslint` 가 지원하는 범위(현재 `<6.1`)에 맞춰요. 7.x 로 올리려면 `typescript-eslint` 지원 여부를 먼저 확인해요.
 
 ### 설치된 스킬
@@ -170,6 +172,24 @@
   `.github/ISSUE_TEMPLATE/task.yml` 과 워크플로우의 `TYPE_TO_LABEL` / `PLACEHOLDER` 를 함께 수정해요.
   라벨 이름을 바꾸면 `.claude/skills/pr-convention` 의 라벨 규칙도 함께 수정해요.
 - `gh` CLI 로 새 할 일 이슈를 만들 때는 양식과 같은 본문 형식(`### 작업 유형` 등)으로 작성하고 `task` 라벨을 붙여요.
+
+## 📌 9. Wiki
+
+- [GitHub Wiki](https://github.com/iamhoonse-dev/iamhoonse-world/wiki) 의 원본은 `docs/wiki/` 예요.
+  `main` 에 머지되면 `.github/workflows/wiki-sync.yml` 이 Wiki 저장소로 동기화해요.
+- Wiki 는 **웹에서 직접 고치지 않아요.** 다음 동기화 때 덮어써져요.
+- **함께 수정해야 하는 곳**: 레포 구조, 툴체인, 워크플로우, 자동화를 바꾸는 PR 에서는 `docs/wiki/` 의 해당 페이지도 함께 수정해요.
+
+  | 바꾸는 것                                   | 수정할 페이지             |
+  | ------------------------------------------- | ------------------------- |
+  | 패키지 구성, `turbo.json`, 공용 설정        | `Architecture.md`         |
+  | Node / pnpm / TypeScript 등 버전, 포맷/린트 | `Toolchain.md`            |
+  | 플러그인, 레포 규약, 훅, 스킬, MCP          | `AI-Workflow.md`          |
+  | 이슈 양식, 라벨, PR 템플릿, GitHub Actions  | `GitHub-Automation.md`    |
+  | 브라우저 검증 방식                          | `Browser-Verification.md` |
+
+- 페이지 이름은 파일 이름을 따르고(`AI-Workflow.md` → "AI Workflow"), 링크는 `[AI Workflow](AI-Workflow)` 처럼 확장자 없이 걸어요.
+  새 페이지를 추가하면 `_Sidebar.md` 와 `Home.md` 의 페이지 안내도 함께 수정해요.
 
 ---
 

@@ -4,7 +4,8 @@
 # 함께 수정해야 하는 곳:
 # - 규칙은 commitlint.config.mjs 하나만 보고, 이 파일에는 규칙을 두지 않아요.
 # - Node / pnpm 버전은 .nvmrc 와 package.json 의 packageManager 를 그대로 읽어요.
-#   이 체크를 브랜치 보호의 필수 체크로 등록했다면, job 이름(commitlint)을 바꿀 때 보호 규칙도 함께 수정해요.
+# - 이 체크(job 이름 commitlint)는 레포 룰셋 "main 보호" 의 필수 상태 체크로 등록돼 있어요.
+#   job 이름을 바꾸면 룰셋의 required_status_checks 도 함께 수정해야 해요. 안 그러면 모든 PR 의 머지가 막혀요.
 name: Commitlint
 
 on:

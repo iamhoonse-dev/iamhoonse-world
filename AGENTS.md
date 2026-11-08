@@ -159,6 +159,8 @@ claude plugin install github-workflow@hoonse-claude-plugins --scope project
 - 훅이 거부하면 `--no-verify` 로 우회하지 않고 메시지를 고쳐요.
 - PR 에서도 `.github/workflows/commitlint.yml` 이 같은 설정으로 커밋 메시지와 PR 제목을 검사해요.
   체크가 실패하면 메시지를 고쳐서(`git rebase -i` / `git commit --amend`) 다시 push 해요.
+  - 이 체크는 레포 룰셋 `main 보호` 의 필수 체크라, 실패하면 머지할 수 없어요. (우회 없음, 긴급 시 룰셋을 잠시 비활성화)
+  - **함께 수정해야 하는 곳**: 워크플로우의 job 이름(`commitlint`)을 바꾸면 룰셋의 필수 체크 이름도 함께 바꿔요.
 - IDE 등 GUI 에서 커밋할 때 `pnpm` 을 찾지 못하면 `~/.config/husky/init.sh` 에서 nvm 을 불러와요.
 
   ```sh

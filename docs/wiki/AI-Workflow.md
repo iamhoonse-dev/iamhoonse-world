@@ -40,7 +40,7 @@ graph TB
 플러그인 마켓플레이스 [hoonse-claude-plugins](https://github.com/iamhoonse-dev/hoonse-claude-plugins) 로 옮겼어요.
 
 - **왜 별도 레포인가요?** 마켓플레이스는 설치할 때 레포 전체를 받아요. 개인 사이트 코드와 분리하는 편이 가벼워요.
-- **어떻게 켜나요?** `.claude/settings.json` 에 마켓플레이스와 플러그인을 선언해 두어서, 레포를 열고 신뢰를 확인하면 설치를 안내받아요.
+- **어떻게 켜나요?** `.claude/settings.json` 에 마켓플레이스와 플러그인을 선언해 두었어요. 다만 이건 켜 두는 설정이고, 실제 설치는 [레포 폴더마다 한 번](#설치--업데이트) 해야 해요.
 
 ```json
 {
@@ -58,6 +58,35 @@ graph TB
   }
 }
 ```
+
+### 설치 / 업데이트
+
+Claude Code 의 플러그인 설치 기록은 **레포(폴더)마다 따로** 남아요.
+다른 레포에 설치했더라도 이 레포에서는 스킬이 등록되지 않아 `Unknown command` 가 날 수 있어요.
+
+```mermaid
+graph TB
+    A["/github-workflow:work-on-issue 23"] --> B{"이 레포 폴더에<br/>설치 기록이 있나요?"}
+    B -->|있음| C["스킬 실행"]
+    B -->|없음| D["Unknown command"]
+    D --> E["레포 루트에서<br/>claude plugin install ... --scope project"]
+    E --> F["Claude Code 재시작"]
+    F --> A
+```
+
+레포 루트에서 실행하고, Claude Code 를 재시작해요.
+
+```sh
+claude plugin marketplace add iamhoonse-dev/hoonse-claude-plugins   # 마켓플레이스가 없을 때만
+claude plugin install git-workflow@hoonse-claude-plugins --scope project
+claude plugin install github-workflow@hoonse-claude-plugins --scope project
+```
+
+- **설치 확인**: 세션에서 `/github-workflow:` 를 입력해 자동완성에 스킬이 보이면 돼요.
+  - `claude plugin list` 는 어느 레포의 설치인지 보여주지 않아요. 정확히 보려면 `~/.claude/plugins/installed_plugins.json` 의 `projectPath` 를 확인해요.
+- **업데이트**: `claude plugin marketplace update hoonse-claude-plugins` 후, **이 레포 폴더에서** `claude plugin update <플러그인>@hoonse-claude-plugins` 를 실행하고 재시작해요.
+- 설치하면 `.claude/settings.json` 의 키 순서가 바뀔 수 있어요. 내용이 같으면 `git checkout -- .claude/settings.json` 으로 되돌려요.
+- `Unknown command` 가 나면 먼저 `/<플러그인>:<스킬>` 형식인지, 그다음 이 레포 폴더에 설치됐는지 확인해요.
 
 ## `/github-workflow:work-on-issue` — 이슈에서 PR 까지
 

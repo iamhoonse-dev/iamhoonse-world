@@ -15,7 +15,8 @@
 
 ## 📌 1. 작업 흐름 (플러그인)
 
-`.claude/settings.json` 에서 두 플러그인을 켜 두었어요. 레포를 열고 신뢰를 확인하면 마켓플레이스 등록과 설치를 안내받아요.
+`.claude/settings.json` 에서 두 플러그인을 켜 두었어요. 다만 이건 **켜 두는 설정**일 뿐이고, 설치 기록은 레포(폴더)마다 따로 남아요.
+다른 레포에 설치했더라도 **이 레포 폴더에서 한 번 설치**해야 스킬이 등록돼요. ([플러그인 설치](#플러그인-설치))
 
 | 플러그인          | 제공하는 것                                                                                      |
 | ----------------- | ------------------------------------------------------------------------------------------------ |
@@ -36,6 +37,25 @@
   | pr-convention   | PR 템플릿 항목을 빠짐없이 작성, 이슈의 작업 유형 라벨을 PR 에도 부착                    |
 
 - **함께 수정해야 하는 곳**: 커밋/브랜치/PR 규칙을 바꿀 때는 이 표와 `.claude/skills/` 의 해당 스킬을 함께 수정해요.
+
+### 플러그인 설치
+
+레포 루트에서 실행하고, Claude Code 를 재시작해요.
+
+```sh
+claude plugin marketplace add iamhoonse-dev/hoonse-claude-plugins   # 마켓플레이스가 없을 때만
+claude plugin install git-workflow@hoonse-claude-plugins --scope project
+claude plugin install github-workflow@hoonse-claude-plugins --scope project
+```
+
+- **설치 확인**: 세션에서 `/github-workflow:` 를 입력해 자동완성에 스킬이 보이면 돼요.
+  - `claude plugin list` 는 어느 레포의 설치인지 보여주지 않아요. 정확히 보려면 `~/.claude/plugins/installed_plugins.json` 의 `projectPath` 를 확인해요.
+- **업데이트**: `claude plugin marketplace update hoonse-claude-plugins` 후, **이 레포 폴더에서** `claude plugin update <플러그인>@hoonse-claude-plugins` 를 실행하고 재시작해요.
+- 설치하면 `.claude/settings.json` 의 키 순서가 바뀔 수 있어요. 내용이 같으면 `git checkout -- .claude/settings.json` 으로 되돌려요.
+- **`Unknown command` 가 나면**
+  1. `/<플러그인>:<스킬>` 형식으로 호출했는지 확인해요.
+  2. 이 레포 폴더에 설치됐는지 확인하고, 아니면 위 명령으로 설치한 뒤 재시작해요.
+- **함께 수정해야 하는 곳**: 설치 안내를 바꾸면 Wiki 의 `AI-Workflow.md` 도 함께 수정해요.
 
 ## 🔁 2. 기본 원칙
 

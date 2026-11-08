@@ -76,6 +76,16 @@ graph TB
 - 이 체크는 `main 보호` 룰셋의 **필수 상태 체크**라, 실패하면 PR 을 머지할 수 없어요. ([레포 설정](#레포-설정))
 - 체크가 실패하면 `git rebase -i` / `git commit --amend` 로 메시지를 고친 뒤 다시 push 해요.
 
+## Wiki 갱신 검사 (PR)
+
+`.github/workflows/wiki-sync-check.yml` 이 PR 마다 `scripts/check-wiki-sync.mjs` 로 Wiki 갱신 누락을 검사해요.
+Claude 의 push / PR 생성 직전 훅([AI Workflow](AI-Workflow#wiki-갱신-검사-훅))과 같은 검사를, 사람이 만든 커밋에도 적용하려는 용도예요.
+
+- 트리거: `pull_request` (opened / synchronize / reopened), 권한은 `contents: read` 만 줘요.
+- 의존성이 없는 스크립트라 Node(`.nvmrc`)만 설치하고 `pnpm install` 은 하지 않아요.
+- **필수 체크가 아니에요.** 실패하면 PR 화면에 표시만 하고 머지는 막지 않아요. (`main 보호` 룰셋에는 `commitlint` 만 등록)
+- Wiki 에 반영할 내용이 없으면 커밋 footer 에 `Wiki-Skip: <이유>` 를 남겨요.
+
 ## 레포 설정
 
 - **머지 시 원격 브랜치 자동 삭제** (`deleteBranchOnMerge`) — 로컬은 `main` 최신화 후 `git branch -d` 로 정리해요.

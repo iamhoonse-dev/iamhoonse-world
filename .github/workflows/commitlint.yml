@@ -1,0 +1,52 @@
+# PR 의 커밋 메시지와 PR 제목을 commitlint 로 검사해요.
+# 로컬 commit-msg 훅(.husky/commit-msg)을 건너뛴 커밋(--no-verify, 훅 미설치, 웹 편집)을 PR 단계에서 막아요.
+#
+# 함께 수정해야 하는 곳:
+# - 규칙은 commitlint.config.mjs 하나만 보고, 이 파일에는 규칙을 두지 않아요.
+# - Node / pnpm 버전은 .nvmrc 와 package.json 의 packageManager 를 그대로 읽어요.
+#   이 체크를 브랜치 보호의 필수 체크로 등록했다면, job 이름(commitlint)을 바꿀 때 보호 규칙도 함께 수정해요.
+name: Commitlint
+
+on:
+  pull_request:
+    # edited: PR 제목을 고쳤을 때 다시 검사
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: commitlint-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    env:
+      HUSKY: 0 # CI 에서는 prepare 스크립트의 훅 설치를 건너뛰어요
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # base..head 범위의 커밋이 모두 필요해요
+
+      - uses: pnpm/action-setup@v6 # version 생략 → packageManager 사용
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: 의존성 설치
+        run: pnpm install --frozen-lockfile
+
+      - name: 커밋 메시지 검사
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: pnpm exec commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose
+
+      # squash 머지 시 PR 제목이 main 의 커밋 메시지가 되기 때문에 함께 검사해요.
+      - name: PR 제목 검사
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }} # run 에 직접 넣지 않아 인젝션을 막아요
+        run: printf '%s' "$PR_TITLE" | pnpm exec commitlint --verbose

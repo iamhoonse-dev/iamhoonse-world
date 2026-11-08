@@ -55,6 +55,26 @@ graph TB
 
 PR 에는 연결된 이슈의 작업 유형 라벨을 그대로 붙여요.
 
+## 커밋 메시지 검사 (PR)
+
+`.github/workflows/commitlint.yml` 이 PR 마다 커밋 메시지를 [Toolchain](Toolchain) 의 로컬 훅과 **같은 규칙**(`commitlint.config.mjs`)으로 다시 검사해요.
+로컬 훅이 막지 못하는 커밋(`--no-verify`, 훅 미설치 환경, GitHub 웹 편집)을 `main` 에 들어오기 전에 걸러요.
+
+```mermaid
+graph TB
+    E["pull_request<br/>opened / synchronize / reopened / edited"] --> S["Node(.nvmrc) + pnpm(packageManager)<br/>pnpm install --frozen-lockfile"]
+    S --> C["커밋 메시지 검사<br/>commitlint --from base --to head"]
+    C --> T["PR 제목 검사<br/>(squash 머지 시 main 의 커밋 메시지)"]
+    T --> R{"모두 통과?"}
+    R -- 예 --> OK["✅ commitlint 체크 통과"]
+    R -- 아니오 --> NG["❌ 체크 실패<br/>메시지를 고쳐 다시 push"]
+```
+
+- PR 제목도 검사해요. 레포가 squash 머지를 허용하는데, squash 하면 PR 제목이 그대로 `main` 의 커밋 메시지가 되기 때문이에요.
+- PR 제목은 `env` 로 넘겨서 `run` 스크립트에 직접 넣지 않아요. (스크립트 인젝션 방지)
+- 권한은 `contents: read` 만 줘요. CI 에서는 `HUSKY=0` 으로 훅 설치를 건너뛰어요.
+- 체크가 실패하면 `git rebase -i` / `git commit --amend` 로 메시지를 고친 뒤 다시 push 해요.
+
 ## 레포 설정
 
 - **머지 시 원격 브랜치 자동 삭제** (`deleteBranchOnMerge`) — 로컬은 `main` 최신화 후 `git branch -d` 로 정리해요.

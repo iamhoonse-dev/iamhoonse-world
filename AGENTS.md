@@ -157,6 +157,8 @@ claude plugin install github-workflow@hoonse-claude-plugins --scope project
   - 규칙은 `commitlint.config.mjs` 에 있고, 규약 원본은 `.claude/skills/commit-message` 예요.
   - scope 허용 목록은 `apps/*`, `packages/*` 의 디렉토리 이름에서 자동으로 만들어져요.
 - 훅이 거부하면 `--no-verify` 로 우회하지 않고 메시지를 고쳐요.
+- PR 에서도 `.github/workflows/commitlint.yml` 이 같은 설정으로 커밋 메시지와 PR 제목을 검사해요.
+  체크가 실패하면 메시지를 고쳐서(`git rebase -i` / `git commit --amend`) 다시 push 해요.
 - IDE 등 GUI 에서 커밋할 때 `pnpm` 을 찾지 못하면 `~/.config/husky/init.sh` 에서 nvm 을 불러와요.
 
   ```sh

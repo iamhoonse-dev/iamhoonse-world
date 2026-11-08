@@ -96,8 +96,10 @@ graph TB
 | `type-enum`            | feat, fix, refactor, perf, test, docs, style, build, ci, chore   |
 | `scope-enum`           | `apps/*`, `packages/*` 디렉토리 이름을 동적으로 수집 (생략 가능) |
 | `header-max-length`    | 72                                                               |
+| `subject-case`         | 끔 (영문 대문자로 시작하는 한국어 요약 허용)                     |
 | `body-max-line-length` | 끔 (한국어 본문, URL)                                            |
 
 - 앱/패키지를 추가하면 scope 목록이 자동으로 늘어나요.
 - 한국어 명사형 요약처럼 기계적으로 검사할 수 없는 부분은 `commit-message` 스킬로 안내해요.
 - IDE 등 GUI 에서 커밋할 때 `pnpm` 을 찾지 못하면 `~/.config/husky/init.sh` 에서 nvm 을 불러와요.
+- 로컬 훅은 `--no-verify` 등으로 건너뛸 수 있어서, PR 에서도 같은 설정으로 한 번 더 검사해요. ([GitHub Automation](GitHub-Automation#커밋-메시지-검사-pr))

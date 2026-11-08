@@ -42,6 +42,9 @@ export default {
     ],
     // scope 는 앱/패키지 디렉토리 이름만 허용해요. (생략 가능)
     "scope-enum": [2, "always", scopes],
+    // 한국어 요약이 "PR", "Turborepo" 처럼 영문 대문자로 시작해도 되도록 꺼요.
+    // (기본값은 sentence-case / start-case / upper-case 등을 금지해서 한국어 요약을 오탐해요)
+    "subject-case": [0],
     // 첫째 줄은 72자 이내
     "header-max-length": [2, "always", 72],
     // 한국어 본문이나 URL 이 기본 제한(100자)에 걸리지 않게 꺼요.

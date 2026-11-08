@@ -73,12 +73,27 @@ graph TB
 - PR 제목도 검사해요. 레포가 squash 머지를 허용하는데, squash 하면 PR 제목이 그대로 `main` 의 커밋 메시지가 되기 때문이에요.
 - PR 제목은 `env` 로 넘겨서 `run` 스크립트에 직접 넣지 않아요. (스크립트 인젝션 방지)
 - 권한은 `contents: read` 만 줘요. CI 에서는 `HUSKY=0` 으로 훅 설치를 건너뛰어요.
+- 이 체크는 `main 보호` 룰셋의 **필수 상태 체크**라, 실패하면 PR 을 머지할 수 없어요. ([레포 설정](#레포-설정))
 - 체크가 실패하면 `git rebase -i` / `git commit --amend` 로 메시지를 고친 뒤 다시 push 해요.
 
 ## 레포 설정
 
 - **머지 시 원격 브랜치 자동 삭제** (`deleteBranchOnMerge`) — 로컬은 `main` 최신화 후 `git branch -d` 로 정리해요.
 - 자유 논의는 **Discussions** 로 분리했어요.
+
+### `main 보호` 룰셋
+
+| 항목      | 값                                                                          |
+| --------- | --------------------------------------------------------------------------- |
+| 대상      | 기본 브랜치 (`~DEFAULT_BRANCH` → `main`)                                    |
+| 필수 체크 | `commitlint` — GitHub Actions 가 보낸 체크만 인정 (`integration_id: 15368`) |
+| 최신화    | 요구하지 않음 (`strict_required_status_checks_policy: false`)               |
+| 우회      | 없음 (관리자 포함)                                                          |
+
+- PR 은 `commitlint` 체크가 통과해야 머지할 수 있어요. 체크가 없는 커밋을 `main` 에 직접 push 하는 것도 거부돼요.
+- **긴급할 때** (예: GitHub Actions 장애): 레포 Settings → Rules → Rulesets 에서 `main 보호` 를 잠시 `Disabled` 로 바꾸고, 머지 후 다시 `Active` 로 돌려요.
+- 룰셋은 코드가 아니라 레포 설정이라 커밋에 남지 않아요. 바꿀 때는 이 표도 함께 수정해요.
+- **함께 수정해야 하는 곳**: `.github/workflows/commitlint.yml` 의 job 이름(`commitlint`)을 바꾸면 룰셋의 필수 체크 이름도 함께 바꿔요. 안 그러면 모든 PR 의 머지가 막혀요.
 
 ## Wiki 동기화
 

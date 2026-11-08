@@ -64,6 +64,7 @@ Refs #<이슈 번호>
 - 관련 이슈는 footer 에 `Refs #<번호>` 로 남겨요. (이슈를 닫는 것은 PR 의 `Closes #<번호>` 로 해요)
 - 성격이 다른 변경은 커밋을 나눠요. (예: PR 템플릿 / 이슈 템플릿)
 - 호환되지 않는 변경은 `feat(web)!:` 처럼 `!` 를 붙이고 footer 에 `BREAKING CHANGE: <설명>` 을 적어요.
+- Wiki 갱신 검사(`scripts/check-wiki-sync.mjs`)에 걸렸지만 Wiki 에 반영할 내용이 정말 없을 때만 footer 에 `Wiki-Skip: <이유>` 를 남겨요. (AGENTS.md 9장)
 
 ## 예시
 

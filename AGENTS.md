@@ -232,6 +232,12 @@ claude plugin install github-workflow@hoonse-claude-plugins --scope project
   | 이슈 양식, 라벨, PR 템플릿, GitHub Actions  | `GitHub-Automation.md`    |
   | 브라우저 검증 방식                          | `Browser-Verification.md` |
 
+- 이 표는 **`scripts/check-wiki-sync.mjs` 가 확정적으로 검사**해요.
+  - Claude 가 `git push` / `gh pr create` 를 실행하기 직전에 프로젝트 훅(`.claude/hooks/check-wiki-sync.sh`)이 검사하고, 누락이 있으면 막아요.
+    막히면 안내된 페이지를 고쳐 커밋한 뒤 다시 실행해요.
+  - PR 에서도 `.github/workflows/wiki-sync-check.yml` 이 같은 검사를 해요. (필수 체크는 아님)
+  - Wiki 에 반영할 내용이 정말 없을 때만 커밋 footer 에 `Wiki-Skip: <이유>` 를 남겨요.
+  - **함께 수정해야 하는 곳**: 이 표를 바꾸면 스크립트의 `RULES` 와 Wiki `AI-Workflow.md` 의 표도 함께 수정해요.
 - 페이지 이름은 파일 이름을 따르고(`AI-Workflow.md` → "AI Workflow"), 링크는 `[AI Workflow](AI-Workflow)` 처럼 확장자 없이 걸어요.
   새 페이지를 추가하면 `_Sidebar.md` 와 `Home.md` 의 페이지 안내도 함께 수정해요.
 

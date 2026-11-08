@@ -163,6 +163,41 @@ sequenceDiagram
 - `git -C <dir> commit`, `cd <dir> && git commit` 도 대상 레포를 판별해 검사해요.
 - 사용자가 명시적으로 허락한 경우에만 `GIT_WORKFLOW_ALLOW_DEFAULT_BRANCH_COMMIT=1` 로 우회해요.
 
+## Wiki 갱신 검사 훅
+
+"구조나 툴체인을 바꾸면 Wiki 도 함께 고친다"(AGENTS.md 9장)는 규칙을 AI 의 판단에 맡기지 않고, 프로젝트 훅으로 **확정적으로** 검사해요.
+훅은 Wiki 내용을 대신 써 주지는 못하지만, 빠뜨린 페이지를 찾아 push / PR 생성을 막고 알려 줘요.
+
+```mermaid
+sequenceDiagram
+    participant C as Claude
+    participant H as .claude/hooks/check-wiki-sync.sh
+    participant S as scripts/check-wiki-sync.mjs
+    C->>H: Bash("git push ..." / "gh pr create ...")
+    H->>S: origin/main...HEAD 변경 파일 검사
+    alt Wiki 를 고쳐야 하는 파일이 있는데 해당 페이지가 안 바뀜
+        S-->>H: exit 1 + 누락 페이지 ← 원인 파일
+        H-->>C: exit 2 → 실행 차단, Claude 가 Wiki 를 고쳐 커밋 후 다시 실행
+    else 누락 없음 또는 Wiki-Skip footer
+        H-->>C: exit 0 → 실행
+    end
+```
+
+- **검사 시점**: 커밋마다가 아니라 `git push` / `gh pr create` 직전이에요. 코드 커밋과 문서 커밋을 나누는 작업 흐름을 깨지 않으려고요.
+- **검사 기준**: 스크립트의 `RULES` (파일 glob → 후보 페이지). AGENTS.md 9장의 표와 같은 내용이고, 후보 페이지 중 하나만 바뀌어도 통과해요.
+
+| 바꾸는 파일                                                                      | 고쳐야 하는 페이지                              |
+| -------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `packages/**`, `turbo.json`, `pnpm-workspace.yaml`                               | `Architecture.md`                               |
+| 루트 `package.json`, `.nvmrc`, Prettier 설정, `commitlint.config.mjs`, `.husky/` | `Toolchain.md`                                  |
+| `.claude/settings.json`, `.claude/skills/`, `.claude/hooks/`, `skills-lock.json` | `AI-Workflow.md`                                |
+| `.mcp.json`                                                                      | `AI-Workflow.md` 또는 `Browser-Verification.md` |
+| `.github/**`                                                                     | `GitHub-Automation.md`                          |
+
+- **예외**: Wiki 에 반영할 내용이 정말 없으면 커밋 footer 에 `Wiki-Skip: <이유>` 를 남겨요. 이유가 이력에 남아요.
+- jq / node 가 없거나 스크립트가 오류를 내면 경고만 하고 통과해요. (도구 문제로 작업이 막히지 않게)
+- 사람이 만든 커밋은 이 훅이 잡지 못해서, PR 에서도 같은 스크립트로 검사해요. ([GitHub Automation](GitHub-Automation#wiki-갱신-검사-pr))
+
 ## Agent Skills 관리
 
 외부 스킬은 [skills CLI](https://github.com/vercel-labs/skills) 로 **프로젝트 범위**에 설치하고, 스킬 파일과 `skills-lock.json` 을 모두 커밋해요.

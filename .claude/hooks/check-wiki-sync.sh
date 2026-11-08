@@ -21,7 +21,20 @@ cwd="$(printf '%s' "$input" | jq -r '.cwd // empty')"
 # git push / gh pr create 가 포함된 명령만 검사 (체이닝 포함)
 push_re='(^|[;&|[:space:](])git([[:space:]]+-C[[:space:]]+[^[:space:]]+)?[[:space:]]+push([[:space:]]|$)'
 pr_re='(^|[;&|[:space:](])gh[[:space:]]+pr[[:space:]]+create([[:space:]]|$)'
-printf '%s' "$cmd" | grep -Eq "$push_re|$pr_re" || exit 0
+
+# 커밋 메시지 등에 들어간 "git push" 문구를 실제 명령으로 오인하지 않도록
+# heredoc 본문과 따옴표 안의 문자열은 지우고 검사해요.
+scan="$(printf '%s\n' "$cmd" | awk '
+  skip { line = $0; sub(/^\t+/, "", line); if (line == term) skip = 0; next }
+  {
+    print
+    if (match($0, /<<-?[ \t]*["\047]?[A-Za-z_][A-Za-z0-9_]*["\047]?/)) {
+      term = substr($0, RSTART, RLENGTH)
+      gsub(/<<-?[ \t]*|["\047]/, "", term)
+      skip = 1
+    }
+  }' | sed -E "s/'[^']*'//g; s/\"[^\"]*\"//g")"
+printf '%s' "$scan" | grep -Eq "$push_re|$pr_re" || exit 0
 
 project="${CLAUDE_PROJECT_DIR:-}"
 target="${cwd:-$PWD}"
